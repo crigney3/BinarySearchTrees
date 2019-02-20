@@ -8,7 +8,6 @@ namespace BinarySearchTreeVisualizer
     {
         protected Node root;
         protected List<int> output;
-        protected List<int> minOutput;
         public Node Root { get { return this.root; } }
         public List<int> Output { get { return this.output; } }
 
@@ -68,24 +67,28 @@ namespace BinarySearchTreeVisualizer
         /// <param name="toDelete"></param>
         public void Remove(Node toDelete)
         {
-            if(toDelete.NodeLeft == null && toDelete.NodeRight == null)
+            Node parent;
+            Node successor = Successor(toDelete);
+            parent = GetParent(this.root, toDelete);
+            toDelete = successor;              
+            
+            if(successor != null)
             {
-                toDelete = null;
-            }
-            else if(toDelete.NodeLeft == null && toDelete.NodeRight != null) {
-                toDelete = toDelete.NodeRight;
-            }
-            else if(toDelete.NodeRight == null && toDelete.NodeLeft != null)
-            {
-                toDelete = toDelete.NodeLeft;
-            }
-            else if(toDelete.NodeLeft != null && toDelete.NodeRight != null)
-            {
-                this.minOutput.Clear();
-                minValue(toDelete);
-                Node successor = Search(this.minOutput[0], toDelete.NodeRight);
-                toDelete = successor;
+                SetNewChild(parent, toDelete);
                 Remove(successor);
+            }
+
+        }
+
+        public void SetNewChild(Node node, Node child)
+        {
+            if(node.Key < child.Key)
+            {
+                node.NodeRight = child;
+            }
+            else if (node.Key > child.Key)
+            {
+                node.NodeLeft = child;
             }
         }
 
@@ -115,15 +118,76 @@ namespace BinarySearchTreeVisualizer
             return null;
         }
 
-        public void minValue(Node node)
+        public Node GetParent(Node node, Node child)
         {
-            if(node == null)
+            if(node.NodeLeft == child || node.NodeRight == child)
             {
-                return;
+                return node;
             }
-            minValue(node.NodeLeft);
-            this.minOutput.Add(node.Key);
-            minValue(node.NodeRight);
+            if(child.Key < node.Key)
+            {
+                node = node.NodeLeft;
+            }
+            else if(child.Key > node.Key)
+            {
+                node = node.NodeRight;
+            }
+            node = GetParent(node, child);
+            return node;
+        }
+
+        public Node Successor(Node node)
+        {
+            Node bestLeft = node.NodeLeft;
+            Node bestRight = node.NodeRight;
+            if(bestLeft != null)
+            {
+                while (true)
+                {
+                    if (bestLeft.NodeRight == null)
+                    {
+                        break;
+                    }
+                    bestLeft = bestLeft.NodeRight;
+                }
+            }
+            if(bestRight != null)
+            {
+                while (true)
+                {
+                    if (bestRight.NodeLeft == null)
+                    {
+                        break;
+                    }
+                    bestRight = bestRight.NodeLeft;
+                }
+            }
+
+            if (bestLeft != null && bestRight != null)
+            {
+                if (Math.Abs(node.Key - bestLeft.Key) < Math.Abs(node.Key - bestRight.Key))
+                {
+                    return bestLeft;
+                }
+                else
+                {
+                    return bestRight;
+                }
+            }
+            if (bestLeft == null)
+            {
+                return bestRight;
+            }
+            else if(bestRight == null)
+            {
+                return bestLeft;
+            }
+            else
+            {
+                return null;
+            }
+            
+            
         }
 
         /// <summary>

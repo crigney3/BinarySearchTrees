@@ -18,7 +18,9 @@ namespace BinarySearchTreeVisualizer
             testData[8] = 10;
             testData[9] = 3;
 
+            /*
             Tree tree = new Tree(testData);
+            Visual visual = new Visual(tree);
             tree.AddNode(tree.Root, 15);
             tree.AddNode(tree.Root, 0);
             tree.AddNode(tree.Root, 11);
@@ -34,7 +36,21 @@ namespace BinarySearchTreeVisualizer
             for (int i = 0; i < tree.Output.Count; i++)
             {
                 Console.WriteLine(tree.Output[i]);
+            }*/
+
+            RedBlackTree rbTree = new RedBlackTree(testData);
+            rbTree.AddNode(rbTree.Root, 20);
+            rbTree.AddNode(rbTree.Root, 21);
+            rbTree.AddNode(rbTree.Root, 22);
+            rbTree.AddNode(rbTree.Root, 23);
+            rbTree.AddNode(rbTree.Root, 15);
+            rbTree.AddNode(rbTree.Root, 0);
+            rbTree.InOrder(rbTree.Root);
+            for (int i = 0; i < rbTree.Output.Count; i++)
+            {
+                Console.WriteLine(rbTree.Output[i]);
             }
+            //visual.DrawTree();
         }
     }
 }
